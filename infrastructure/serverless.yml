@@ -1,0 +1,21 @@
+service: infrastructure
+
+custom:
+  stage: ${opt:stage, 'dev'}
+  JiraOpsUserPoolName: ${self:custom.stage}-jira-ops-user-pool
+  JiraOpsUserPoolClientName: ${self:custom.stage}-ops-user-pool-client
+  JiraOpsIdentityPoolName: ${self:custom.stage}-ops-identity-pool
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${self:custom.stage}
+  region: eu-west-2
+  profile: glasswall
+  lambdaHashingVersion: 20201221
+  apiGateway:
+    shouldStartNameWithService: true
+
+resources:
+  - ${file(cognito/ops-user-pool.yml)}
+  - ${file(cognito/ops-identity-pool.yml)}
